@@ -102,8 +102,11 @@ export class GeminiHandler implements ApiHandler {
 				includeThoughts: true,
 			}
 		}
-		requestConfig.thinkingConfig = {
-			includeThoughts: true,
+		// Only include thoughts if the option is enabled
+		if (this.options.geminiEnableThoughts) {
+			requestConfig.thinkingConfig = {
+				includeThoughts: true,
+			}
 		}
 		// Generate content using the configured parameters
 		const sdkCallStartTime = Date.now()
