@@ -135,19 +135,28 @@ export class GeminiHandler implements ApiHandler {
 
 				const candidateForThoughts = chunk?.candidates?.[0]
 				const partsForThoughts = candidateForThoughts?.content?.parts
-				let thoughts = "thoughts + part.text"
+				let thoughts = "" // Initialize as empty string
 
 				if (partsForThoughts) {
 					// This ensures partsForThoughts is a Part[] array
 					for (const part of partsForThoughts) {
-						if (part.thought) {
+						if (part.thought && part.text) {
+							// Ensure part.text exists
 							// Handle the thought part
-							thoughts = thoughts + part.text
-							console.info("Thought:", thoughts)
+							thoughts += part.text + "\n" // Append thought and a newline
 						}
 					}
 				}
-				console.info("Thoughts:", thoughts)
+
+				if (thoughts.trim() !== "") {
+					console.info("Yielding thoughts as reasoning:", thoughts.trim())
+					yield {
+						type: "reasoning",
+						reasoning: thoughts.trim(),
+					}
+					thoughts = "" // Reset thoughts after yielding
+				}
+
 				if (chunk.text) {
 					yield {
 						type: "text",
