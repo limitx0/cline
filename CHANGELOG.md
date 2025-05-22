@@ -1,5 +1,20 @@
 # Changelog
 
+## 3.17.0
+
+### Minor Changes
+
+-   b97e57f: integration with nebius ai studio
+-   58f80d4: remove proto file
+
+### Patch Changes
+
+-   0200286: when the assistant says to act mode we render a custom highlight with hotkey suggestion
+-   c511b91: New settings page split into tabs
+-   782ed7f: autoApprovalSettings protobus migration
+-   c3b556d: Remove advanced settings banner
+-   efb6ae1: Change the extension title name wording
+
 ## [3.16.3]
 
 -   Add devstral-small-2505 to the Mistral model list, a new specialized coding model from Mistral AI (Thanks @BarreiroT!)
