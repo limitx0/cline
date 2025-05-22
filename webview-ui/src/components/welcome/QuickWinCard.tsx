@@ -3,7 +3,7 @@ import { QuickWinTask } from "./quickWinTasks"
 
 interface QuickWinCardProps {
 	task: QuickWinTask
-	onExecute: (command: string, title: string) => void
+	onExecute: () => void // Changed to accept no arguments
 }
 
 // Placeholder for actual icons. In a real scenario, these would be SVG components or an icon library.
@@ -43,7 +43,7 @@ const QuickWinCard: React.FC<QuickWinCardProps> = ({ task, onExecute }) => {
 	return (
 		<div
 			className="bg-neutral-800/60 p-3 rounded-md shadow-sm hover:bg-rose-800/40 transition-colors duration-150 ease-in-out border border-neutral-700/30 flex items-center space-x-3 cursor-pointer group"
-			onClick={() => onExecute(task.actionCommand, task.title)}
+			onClick={() => onExecute()} // Changed to call onExecute without arguments
 			title={task.description} // Use native tooltip for the full description
 		>
 			<div className="flex-shrink-0 text-neutral-400 group-hover:text-rose-300 transition-colors duration-150">

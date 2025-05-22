@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react"
 import { TaskServiceClient } from "@/services/grpc-client"
 import { useExtensionState } from "../../context/ExtensionStateContext"
 import QuickWinCard from "./QuickWinCard"
-import { quickWinTasks } from "./quickWinTasks"
+import { QuickWinTask, quickWinTasks } from "./quickWinTasks" // Import QuickWinTask interface
 import { vscode } from "../../utils/vscode" // Assuming this path is correct
 
 const QUICK_WINS_HISTORY_THRESHOLD = 3000
@@ -46,15 +46,9 @@ export const SuggestedTasks: React.FC = () => {
 
 	const showQuickWins = !taskHistory || taskHistory.length < QUICK_WINS_HISTORY_THRESHOLD
 
-	const handleExecuteQuickWin = (command: string, title: string) => {
-		// For Quick Wins, we send a specific message type.
-		// The backend (Controller) will interpret this to start a task,
-		// potentially pre-filling the input with the 'title' or using 'command'
-		// to trigger a predefined action.
-		vscode.postMessage({
-			type: "executeQuickWin",
-			payload: { command, title }, // Send command and title
-		})
+	// Updated to use the prompt from QuickWinTask
+	const handleExecuteQuickWin = async (prompt: string) => {
+		await TaskServiceClient.newTask({ text: prompt, images: [] })
 	}
 
 	// Handle task selection for the carousel
@@ -115,9 +109,13 @@ export const SuggestedTasks: React.FC = () => {
 				{/* The title is now rendered by HomeHeader */}
 				{/* Container for Quick Win Cards: simple vertical stack */}
 				<div className="flex flex-col space-y-2">
-					{quickWinTasks.map((task) => (
-						<QuickWinCard key={task.id} task={task} onExecute={handleExecuteQuickWin} />
-					))}
+					{quickWinTasks.map(
+						(
+							task: QuickWinTask, // Add type annotation for task
+						) => (
+							<QuickWinCard key={task.id} task={task} onExecute={() => handleExecuteQuickWin(task.prompt)} />
+						),
+					)}
 				</div>
 			</div>
 		)
