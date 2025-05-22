@@ -5,6 +5,8 @@ import QuickWinCard from "./QuickWinCard"
 import { quickWinTasks } from "./quickWinTasks"
 import { vscode } from "../../utils/vscode" // Assuming this path is correct
 
+const QUICK_WINS_HISTORY_THRESHOLD = 3000
+
 interface Task {
 	id: string
 	title: string
@@ -42,7 +44,7 @@ export const SuggestedTasks: React.FC = () => {
 	const [isDownHovered, setIsDownHovered] = useState(false)
 	const { taskHistory } = useExtensionState()
 
-	const showQuickWins = !taskHistory || taskHistory.length < 3000
+	const showQuickWins = !taskHistory || taskHistory.length < QUICK_WINS_HISTORY_THRESHOLD
 
 	const handleExecuteQuickWin = (command: string, title: string) => {
 		// For Quick Wins, we send a specific message type.
@@ -108,7 +110,7 @@ export const SuggestedTasks: React.FC = () => {
 	if (showQuickWins) {
 		return (
 			<div className="px-4 py-4 select-none">
-				<h2 className="text-lg font-semibold text-neutral-200 mb-4 text-center">Quick Wins with Cline ✨</h2>
+				{/* The title is now rendered by HomeHeader */}
 				<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 					{quickWinTasks.map((task) => (
 						<QuickWinCard key={task.id} task={task} onExecute={handleExecuteQuickWin} />
