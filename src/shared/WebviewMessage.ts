@@ -39,6 +39,7 @@ export interface WebviewMessage {
 		| "grpc_request"
 		| "grpc_request_cancel"
 		| "toggleWorkflow"
+		| "executeQuickWin" // Added for the new Quick Win feature
 
 	text?: string
 	disabled?: boolean
@@ -89,6 +90,9 @@ export interface WebviewMessage {
 	workflowPath?: string
 	enabled?: boolean
 	filename?: string
+
+	// For executeQuickWin
+	payload?: { command: string; title: string }
 
 	offset?: number
 	shellIntegrationTimeout?: number

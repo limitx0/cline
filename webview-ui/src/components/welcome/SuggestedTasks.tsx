@@ -1,5 +1,9 @@
 import React, { useState, useEffect, useRef } from "react"
 import { TaskServiceClient } from "@/services/grpc-client"
+import { useExtensionState } from "../../context/ExtensionStateContext"
+import QuickWinCard from "./QuickWinCard"
+import { quickWinTasks } from "./quickWinTasks"
+import { vscode } from "../../utils/vscode" // Assuming this path is correct
 
 interface Task {
 	id: string
@@ -36,13 +40,27 @@ export const SuggestedTasks: React.FC = () => {
 	const pauseTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 	const [isUpHovered, setIsUpHovered] = useState(false)
 	const [isDownHovered, setIsDownHovered] = useState(false)
+	const { taskHistory } = useExtensionState()
 
-	// Handle task selection
+	const showQuickWins = !taskHistory || taskHistory.length < 3000
+
+	const handleExecuteQuickWin = (command: string, title: string) => {
+		// For Quick Wins, we send a specific message type.
+		// The backend (Controller) will interpret this to start a task,
+		// potentially pre-filling the input with the 'title' or using 'command'
+		// to trigger a predefined action.
+		vscode.postMessage({
+			type: "executeQuickWin",
+			payload: { command, title }, // Send command and title
+		})
+	}
+
+	// Handle task selection for the carousel
 	const handleTaskClick = async (prompt: string) => {
 		await TaskServiceClient.newTask({ text: prompt, images: [] })
 	}
 
-	// Function to handle arrow clicks and navigation
+	// Function to handle arrow clicks and navigation for the carousel
 	const handleNavigation = (direction: "prev" | "next") => {
 		// Pause auto-scrolling for 5 seconds
 		setIsPaused(true)
@@ -85,8 +103,22 @@ export const SuggestedTasks: React.FC = () => {
 		}
 	}, [])
 
-	const currentTask = tasks[currentIndex]
+	const currentTask = tasks[currentIndex] // This is for the carousel
 
+	if (showQuickWins) {
+		return (
+			<div className="px-4 py-4 select-none">
+				<h2 className="text-lg font-semibold text-neutral-200 mb-4 text-center">Quick Wins with Cline ✨</h2>
+				<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+					{quickWinTasks.map((task) => (
+						<QuickWinCard key={task.id} task={task} onExecute={handleExecuteQuickWin} />
+					))}
+				</div>
+			</div>
+		)
+	}
+
+	// Else, show the existing carousel
 	return (
 		<div className="px-6 py-2 select-none">
 			{/* Container with fixed height to prevent layout shift */}

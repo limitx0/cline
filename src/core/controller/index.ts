@@ -499,6 +499,15 @@ export class Controller {
 				}
 				break
 			}
+			case "executeQuickWin":
+				if (message.payload) {
+					const { command, title } = message.payload
+					this.outputChannel.appendLine(`Received executeQuickWin: command='${command}', title='${title}'`)
+					// For now, we'll treat the title as the prompt for a new task.
+					// In the future, 'command' could map to more specific predefined actions.
+					await this.initTask(title)
+				}
+				break
 
 			// Add more switch case statements here as more webview message commands
 			// are created within the webview context (i.e. inside media/main.js)
