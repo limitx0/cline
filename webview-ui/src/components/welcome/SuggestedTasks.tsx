@@ -109,9 +109,12 @@ export const SuggestedTasks: React.FC = () => {
 
 	if (showQuickWins) {
 		return (
-			<div className="px-4 py-4 select-none">
+			<div className="px-4 pt-2 pb-4 select-none">
+				{" "}
+				{/* Reduced top padding slightly */}
 				{/* The title is now rendered by HomeHeader */}
-				<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+				{/* Container for Quick Win Cards: simple vertical stack */}
+				<div className="flex flex-col space-y-2">
 					{quickWinTasks.map((task) => (
 						<QuickWinCard key={task.id} task={task} onExecute={handleExecuteQuickWin} />
 					))}

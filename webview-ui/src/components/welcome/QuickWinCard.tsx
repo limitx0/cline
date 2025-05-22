@@ -21,15 +21,37 @@ const renderIcon = (iconName?: string) => {
 }
 
 const QuickWinCard: React.FC<QuickWinCardProps> = ({ task, onExecute }) => {
+	// Shorten button text if it's long, or use a generic action verb
+	let compactButtonText = task.buttonText || "Run"
+	if (compactButtonText.length > 10) {
+		const words = compactButtonText.split(" ")
+		compactButtonText = words[0] // Use the first word
+		if (words.length > 1 && words[0].toLowerCase() === "scan" && words[1].toLowerCase() === "project") {
+			compactButtonText = "Scan"
+		} else if (words.length > 1 && words[0].toLowerCase() === "draft" && words[1].toLowerCase() === "now") {
+			compactButtonText = "Draft"
+		}
+	}
+
 	return (
-		<div className="bg-neutral-800/70 p-5 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 ease-in-out border border-neutral-700/50 backdrop-blur-sm">
-			{renderIcon(task.icon)}
-			<h3 className="text-lg font-semibold text-neutral-100 mb-2">{task.title}</h3>
-			<p className="text-sm text-neutral-300 mb-4 min-h-[3em]">{task.description}</p>
+		<div
+			className="bg-neutral-800/70 p-3 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 ease-in-out border border-neutral-700/50 backdrop-blur-sm flex items-center space-x-3 cursor-pointer"
+			onClick={() => onExecute(task.actionCommand, task.title)}
+			title={task.description} // Use native tooltip for the full description
+		>
+			<div className="flex-shrink-0">{renderIcon(task.icon)}</div>
+			<div className="flex-grow min-w-0">
+				{" "}
+				{/* min-w-0 for text truncation if needed */}
+				<h3 className="text-sm font-semibold text-neutral-100 truncate">{task.title}</h3>
+				{/* Optional: very short description or remove entirely */}
+				{/* <p className="text-xs text-neutral-400 truncate">{task.description.substring(0,30)}...</p> */}
+			</div>
 			<button
-				onClick={() => onExecute(task.actionCommand, task.title)}
-				className="w-full bg-gradient-to-r from-sky-500 to-cyan-500 hover:from-sky-600 hover:to-cyan-600 text-white font-medium py-2.5 px-4 rounded-lg transition-all duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-sky-400 focus:ring-opacity-75">
-				{task.buttonText || "Try it ✨"}
+				// The whole card is clickable, this button is more of a visual cue
+				// Or, make only this button clickable by removing onClick from parent div
+				className="flex-shrink-0 bg-sky-600 hover:bg-sky-500 text-white text-xs font-medium py-1.5 px-3 rounded-md transition-colors duration-200 ease-in-out">
+				{compactButtonText}
 			</button>
 		</div>
 	)
