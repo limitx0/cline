@@ -1058,12 +1058,16 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 					{showAnnouncement && <Announcement version={version} hideAnnouncement={hideAnnouncement} />}
 
 					<HomeHeader />
-					{taskHistory.length > 0 && <HistoryPreview showHistoryView={showHistoryView} />}
+					{/* Conditionally render Recent Tasks header and preview */}
+					{(!taskHistory || taskHistory.length >= 3000) && taskHistory.length > 0 && (
+						<HistoryPreview showHistoryView={showHistoryView} />
+					)}
 				</div>
 			)}
 
 			{!task && (
 				<>
+					{/* SuggestedTasks now internally decides whether to show QuickWins or the carousel */}
 					<SuggestedTasks />
 					<AutoApproveBar />
 				</>
