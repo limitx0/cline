@@ -2128,7 +2128,9 @@ const ApiOptions = ({
 							{selectedProvider === "nebius" && createDropdown(nebiusModels)}
 						</DropdownContainer>
 
-						{((selectedProvider === "anthropic" && selectedModelId === "claude-3-7-sonnet-20250219") ||
+						{((selectedProvider === "anthropic" &&
+							(selectedModelId === "claude-3-7-sonnet-20250219" ||
+								selectedModelId === "claude-4-sonnet-20250522")) ||
 							(selectedProvider === "vertex" && selectedModelId === "claude-3-7-sonnet@20250219")) && (
 							<ThinkingBudgetSlider apiConfiguration={apiConfiguration} setApiConfiguration={setApiConfiguration} />
 						)}
